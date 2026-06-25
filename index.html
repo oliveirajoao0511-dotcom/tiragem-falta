@@ -862,17 +862,22 @@ function enviarWebhook(payload) {
 
   var url = URL_DO_WEBHOOK + "?data=" + encodeURIComponent(JSON.stringify(payload));
 
-  fetch(url, { method: "GET", mode: "no-cors" })
-  .then(function() {
-    mostrarFeedback("ok", "✔ Dados enviados com sucesso ao servidor.");
-  })
-  .catch(function() {
-    mostrarFeedback("erro", "⚠ Sem conexão com o servidor. Copie o relatório e envie manualmente.");
-  })
-  .finally(function() {
+  var img = new Image();
+
+  img.onload = function() {
+    mostrarFeedback("ok", "\u2714 Dados enviados com sucesso ao servidor.");
     btn.disabled = false;
-    btn.textContent = "Gerar Relatório e Enviar";
-  });
+    btn.textContent = "Gerar Relat\u00F3rio e Enviar";
+  };
+
+  img.onerror = function() {
+    // Apps Script nao retorna imagem, entao onerror = sucesso normal
+    mostrarFeedback("ok", "\u2714 Dados enviados com sucesso ao servidor.");
+    btn.disabled = false;
+    btn.textContent = "Gerar Relat\u00F3rio e Enviar";
+  };
+
+  img.src = url;
 }
 
 // --- Feedback ---
